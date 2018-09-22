@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Scanner;
 
 
-public class Yoda {
+public class Yoda_260708548 {
     public static void main(String[] args) {
         List<Integer> inputList = read();
         // for (Integer num: inputList) {
