@@ -1,4 +1,6 @@
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
@@ -9,15 +11,20 @@ public class GuessDataStruc_260708548 {
         ArrayList<ArrayList<Integer>> rowsOfTestCases = readInput();
         for (ArrayList<Integer> tcRow : rowsOfTestCases) {
 
-            int[] points = new int[3];
+            boolean[] whichStructure = {true, true, true};
             String result = "";
             List<Integer> bagOfNumbers = new ArrayList<Integer>();
+            // int bagMaxSize = 0;
             for (int num : tcRow) {
                 if (num > 0) {
                     bagOfNumbers.add(num);
+                    // int bagSize = bagOfNumbers.size();
+                    // if (bagMaxSize < bagSize) {
+                    //     bagMaxSize = bagSize;
+                    // }
                 }
                 else {
-                    int outcome = evalBagAfterRemoval(bagOfNumbers, num * (-1), points);
+                    int outcome = evalBagAfterRemoval(bagOfNumbers, num * (-1), whichStructure);
                     if (outcome == -1) {
                         result = "impossible";
                         break;
@@ -26,47 +33,75 @@ public class GuessDataStruc_260708548 {
             }
 
             if (result != "impossible") {
-                int stackPoints = points[0];
-                int queuePoints = points[1];
-                int priorityQueuePoints = points[2];
-                boolean isStack = stackPoints != 0 && queuePoints == 0 && priorityQueuePoints == 0;
-                boolean isQueue = queuePoints != 0 && stackPoints == 0 && priorityQueuePoints == 0;
-                boolean isPriorityQueue = priorityQueuePoints != 0 && stackPoints == 0 && queuePoints == 0;
+                // int stackPoints = whichStructure[0];
+                // int queuePoints = whichStructure[1];
+                // int priorityQueuePoints = whichStructure[2];
+                // boolean isStack = stackPoints != 0 && queuePoints == 0 && priorityQueuePoints == 0;
+                // boolean isQueue = queuePoints != 0 && stackPoints == 0 && priorityQueuePoints == 0;
+                // boolean isPriorityQueue = priorityQueuePoints != 0 && stackPoints == 0 && queuePoints == 0;
 
-                if (isStack) {
+                // boolean stackEqualToMax = stackPoints == bagMaxSize;
+                // boolean queueEqualToMax = queuePoints == bagMaxSize;
+                // boolean priorityQEqualToMax = priorityQueuePoints == bagMaxSize;
+                // if (isStack || stackPoints - queuePoints == 1) {
+                //     result = "stack";
+                // }
+                // else if (isQueue || queuePoints - stackPoints == 1) {
+                //     result = "queue";
+                // }
+                // else if (isPriorityQueue) {
+                //     result = "priority queue";
+                // }
+                // else if ((stackPoints != 0 && queuePoints != 0) || (stackPoints != 0 && priorityQueuePoints != 0) || (queuePoints != 0 && priorityQueuePoints != 0)) {
+                //     result = "not sure";
+                // }
+
+                boolean isStack = whichStructure[0];
+                boolean isQueue = whichStructure[1];
+                boolean isPriorityQ = whichStructure[2];
+                if (isStack && !isQueue && !isPriorityQ) {
                     result = "stack";
                 }
-                else if (isQueue) {
+                else if (!isStack && isQueue && !isPriorityQ) {
                     result = "queue";
                 }
-                else if (isPriorityQueue) {
+                else if (!isStack && !isQueue && isPriorityQ) {
                     result = "priority queue";
                 }
-                else if ((isStack && isQueue) || (isStack && isPriorityQueue) || (isQueue &&isPriorityQueue)) {
+                else {
                     result = "not sure";
                 }
             }
 
             System.out.println(result);
+            // System.out.println(Arrays.toString(whichStructure));
         }
 
     }
 
 
-    public static int evalBagAfterRemoval(List<Integer> bagOfNumbers, int num, int[] points) {
+    public static int evalBagAfterRemoval(List<Integer> bagOfNumbers, int num, boolean[] whichStructure) {
+        // bagOfNumbers.forEach(System.out::println);
+        // System.out.println("---");
         if (!bagOfNumbers.contains(num)) {
             return -1;
         }
         else {
-            if (num == bagOfNumbers.get(0)) {
-                points[1] += 1;
+            if (num != bagOfNumbers.get(bagOfNumbers.size()-1)) {
+                //stack
+                whichStructure[0] = false;
             }
-            if (num == bagOfNumbers.get(bagOfNumbers.size()-1)) {
-                points[0] += 1;
+            if (num != bagOfNumbers.get(0)) {
+                //queue
+                whichStructure[1] = false;
             }
-            if (num == Collections.max(bagOfNumbers)) {
-                points[2] += 1;
+            if (num != Collections.max(bagOfNumbers)) {
+                //priority queue
+                whichStructure[2] = false;
             }
+
+            Integer number = num;
+            bagOfNumbers.remove(number);
             return 0;
         }
     }
@@ -74,23 +109,28 @@ public class GuessDataStruc_260708548 {
 
     public static ArrayList<ArrayList<Integer>> readInput() {
         ArrayList<ArrayList<Integer>> rowsOfTestCases = new ArrayList<ArrayList<Integer>>();
-        Scanner sc = new Scanner(System.in);
-        while (sc.hasNextInt()) {
-            int numLines = sc.nextInt();
-            ArrayList<Integer> tcRow = new ArrayList<Integer>();
-            for (int i = 0; i < numLines; i++) {
-                int command = sc.nextInt();
-                if (command == 1) {
-                    tcRow.add(sc.nextInt());
+        File inputFile = new File("./samples/guessthedatastructure_sample.in");
+        try {
+            Scanner sc = new Scanner(inputFile);
+            while (sc.hasNextInt()) {
+                int numLines = sc.nextInt();
+                ArrayList<Integer> tcRow = new ArrayList<Integer>();
+                for (int i = 0; i < numLines; i++) {
+                    int command = sc.nextInt();
+                    if (command == 1) {
+                        tcRow.add(sc.nextInt());
+                    }
+                    else {
+                        tcRow.add(sc.nextInt() * -1);
+                    }
                 }
-                else {
-                    tcRow.add(sc.nextInt() * -1);
-                }
+                rowsOfTestCases.add(tcRow);
             }
-            rowsOfTestCases.add(tcRow);
+            sc.close();
+        } catch (Exception e) {
+            System.out.println("Some error!");
         }
 
-        sc.close();
         return rowsOfTestCases;
     }
 
