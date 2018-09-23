@@ -6,10 +6,7 @@ import java.util.Scanner;
 
 public class Yoda_260708548 {
     public static void main(String[] args) {
-        List<Integer> inputList = read();
-        // for (Integer num: inputList) {
-        //     System.out.println(num);
-        // }
+        List<Integer> inputList = readInput();
         List<Integer> l1 = makeList(inputList.get(0));
         List<Integer> l2 = makeList(inputList.get(1));
 
@@ -17,23 +14,35 @@ public class Yoda_260708548 {
         int l2Size = l2.size();
         int whichIsBigger = 0;
 
-        // System.out.println(l1 + "\n" + l2);
-        List<Integer> leftoverNums = new ArrayList<Integer>();
+        /**
+         * list which stores the leftover digits
+         * from whichever list of digits is bigger
+         */
+        List<Integer> leftoverDigits = new ArrayList<Integer>();
         int smallerLength = 0;
         if (l1Size > l2Size) {
             smallerLength = l2Size;
             whichIsBigger = 1;
-            leftoverNums = l1.subList(smallerLength, l1Size);
+            leftoverDigits = l1.subList(smallerLength, l1Size);
         }
         else if (l2Size > l1Size) {
             smallerLength = l1Size;
             whichIsBigger = -1;
-            leftoverNums = l2.subList(smallerLength, l2Size);
+            leftoverDigits = l2.subList(smallerLength, l2Size);
         }
         else {
+            /**
+             * the two lists are
+             * of equal lengths
+             */
             smallerLength = l1Size;
         }
 
+        /**
+         * these lists will store whatever digits
+         * are left for the respective numbers
+         * after the comparisons are done
+         */
         List<Integer> l1Modified = new ArrayList<Integer>();
         List<Integer> l2Modified = new ArrayList<Integer>();
 
@@ -48,30 +57,62 @@ public class Yoda_260708548 {
                 l2Modified.add(l2Digit);
             }
             else {
+                /**
+                 * if the digits are the same,
+                 * both of them get added to
+                 * their respective lists
+                 */
                 l1Modified.add(l1Digit);
                 l2Modified.add(l2Digit);
             }
         }
 
+        /**
+         * depending on which list was
+         * bigger, we add the leftover
+         * digits to that modified list
+         */
         if (whichIsBigger == 1) {
-            l1Modified.addAll(leftoverNums);
+            l1Modified.addAll(leftoverDigits);
         }
         else if (whichIsBigger == -1) {
-            l2Modified.addAll(leftoverNums);
+            l2Modified.addAll(leftoverDigits);
         }
 
-        // l1Modified.forEach(System.out::println);
-        // l2Modified.forEach(System.out::println);
+        /**
+         * the digits in the (modified) lists
+         * are in reverse order to how they were
+         * present in the numbers. we needed them
+         * in reverse order till now since we were
+         * making comparisons. now that we are finished
+         * making comparions, we can put them back in order.
+         */
         Collections.reverse(l1Modified);
         Collections.reverse(l2Modified);
+
+        /**
+         * more efficient to use StringBuffer
+         * than to repeatedly concatenate to a String
+         */
         StringBuffer l1Output = new StringBuffer();
         StringBuffer l2Output = new StringBuffer();
+
+        /**
+         * these will store the final answers
+         */
         String l1Answer = "";
         String l2Answer = "";
+
         if (l1Modified.isEmpty()) {
             l1Answer = "YODA";
         }
         else {
+            /**
+             * the answer would have been just l1Output.toString() but
+             * for cases where we have '00' as the output, it needs to
+             * be converted to '0'. we use parseInt for that and then
+             * convert that to a String once again.
+             */
             l1Modified.forEach(digit->l1Output.append(digit));
             l1Answer = Integer.parseInt(l1Output.toString()) + "";
         }
@@ -81,6 +122,9 @@ public class Yoda_260708548 {
             l2Answer = "YODA";
         }
         else {
+            /**
+             * same logic as for l1 above
+             */
             l2Modified.forEach(digit->l2Output.append(digit));
             l2Answer = Integer.parseInt(l2Output.toString()) + "";
         }
@@ -90,7 +134,11 @@ public class Yoda_260708548 {
     }
 
 
-    public static List<Integer> read() {
+    /**
+     *
+     * @return list of input numbers
+     */
+    public static List<Integer> readInput() {
         List<Integer> inputList = new ArrayList<Integer>();
         Scanner sc = new Scanner(System.in);
         for (int i = 0; i < 2; i++) {
@@ -102,6 +150,28 @@ public class Yoda_260708548 {
     }
 
 
+    /**
+     *
+     * @param num
+     * @return the number is broken down into its
+     * component digits and returned as a list of ints
+     * whose order is REVERSED to that of the number.
+     * we don't fix this while returning the list since
+     * we need this reverse ordering to compare the numbers.
+     *
+     * e.g. numbers are 4567 and 389
+     * currently, the lists returned would be -
+     * [7, 6, 5, 4]
+     * [9, 8, 3]
+     * this is correct since the digits in the
+     * right places/positions would be compared.
+     * if the lists were reversed and returned -
+     * [4, 5, 6, 7]
+     * [3, 8, 9]
+     * 4 is in the thousands place while 3 is in the
+     * hundreds place. this would be incorrect since
+     * they should not be compared.
+     */
     public static List<Integer> makeList(int num) {
         List<Integer> numAsList = new ArrayList<Integer>();
         while (num > 0) {
@@ -109,7 +179,6 @@ public class Yoda_260708548 {
             numAsList.add(digit);
             num = num / 10;
         }
-        // Collections.reverse(numAsList);
         return numAsList;
     }
 }
