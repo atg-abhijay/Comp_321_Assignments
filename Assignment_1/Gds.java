@@ -10,13 +10,25 @@ public class Gds {
     public static void main(String[] args) {
         ArrayList<ArrayList<Integer>> rowsOfTestCases = readInput();
         for (ArrayList<Integer> tcRow : rowsOfTestCases) {
+            /**
+             * we will assume at the beginning that
+             * all 3 data structures could be possible/true
+             */
             boolean[] whichStructure = {true, true, true};
             String result = "";
             List<Integer> bagOfNumbers = new ArrayList<Integer>();
-            for (int num : tcRow) {
+            for (Integer num : tcRow) {
+                /**
+                 * if num is positive, that means
+                 * it is being added to the bag
+                 */
                 if (num > 0) {
                     bagOfNumbers.add(num);
                 }
+                /**
+                 * if num is negative, it is
+                 * being removed from the bag
+                 */
                 else {
                     int outcome = evalBagAfterRemoval(bagOfNumbers, num * (-1), whichStructure);
                     if (outcome == -1) {
@@ -40,24 +52,27 @@ public class Gds {
                 else if (!isStack && !isQueue && isPriorityQ) {
                     result = "priority queue";
                 }
+                /**
+                 * if two of them are
+                 * true at the same time
+                 */
                 else if ((isStack && isQueue) || (isStack && isPriorityQ) || (isQueue && isPriorityQ)) {
                     result = "not sure";
                 }
-                else {
+                /**
+                 * if neither a stack, nor a
+                 * queue nor a priority queue
+                 */
+                else if (!isStack && !isQueue && !isPriorityQ){
                     result = "impossible";
+                }
             }
-            }
-
-            // bagOfNumbers.forEach(System.out::println);
             System.out.println(result);
-            // System.out.println(Arrays.toString(whichStructure));
         }
     }
 
 
-    public static int evalBagAfterRemoval(List<Integer> bagOfNumbers, int num, boolean[] whichStructure) {
-        // bagOfNumbers.forEach(System.out::println);
-        // System.out.println("---");
+    public static int evalBagAfterRemoval(List<Integer> bagOfNumbers, Integer num, boolean[] whichStructure) {
         if (!bagOfNumbers.contains(num)) {
             return -1;
         }
@@ -75,18 +90,25 @@ public class Gds {
                 whichStructure[2] = false;
             }
 
-            Integer number = num;
-            bagOfNumbers.remove(number);
+            bagOfNumbers.remove(num);
             return 0;
         }
     }
 
 
+    /**
+     * Obtains all the input test cases.
+     *
+     * @return An arraylist of arraylist of integers.
+     * Each arraylist (within the outer arraylist)
+     * corresponds to one testcase. To differentiate
+     * between numbers associated with type-1 and type-2
+     * commands, numbers followed by a type-1 command
+     * are inserted as is into the arraylist and those
+     * after a type-2 command are multiplied by (-1).
+     */
     public static ArrayList<ArrayList<Integer>> readInput() {
         ArrayList<ArrayList<Integer>> rowsOfTestCases = new ArrayList<ArrayList<Integer>>();
-        //guessthedatastructure_sample.in
-        // File inputFile = new File("test");
-        // try{
         Scanner sc = new Scanner(System.in);
         while (sc.hasNextInt()) {
             int numLines = sc.nextInt();
@@ -103,16 +125,6 @@ public class Gds {
             rowsOfTestCases.add(tcRow);
         }
         sc.close();
-        // }
-
-        // catch (Exception e) {
-        //     System.out.println("some error!");
-        // }
-
-        // for (ArrayList<Integer> row : rowsOfTestCases) {
-        //     row.forEach(number->System.out.print(number + " "));
-        //     System.out.println();
-        // }
         return rowsOfTestCases;
     }
 }
