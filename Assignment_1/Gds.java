@@ -30,53 +30,48 @@ public class Gds {
                  * being removed from the bag
                  */
                 else {
-                    int outcome = evalBagAfterRemoval(bagOfNumbers, num * (-1), whichStructure);
-                    if (outcome == -1) {
-                        result = "impossible";
-                        break;
-                    }
+                    result = evalBagAfterRemoval(bagOfNumbers, num * (-1), whichStructure);
                 }
             }
 
-            if (result != "impossible") {
-                boolean isStack = whichStructure[0];
-                boolean isQueue = whichStructure[1];
-                boolean isPriorityQ = whichStructure[2];
+            boolean isStack = whichStructure[0];
+            boolean isQueue = whichStructure[1];
+            boolean isPriorityQ = whichStructure[2];
 
-                if (isStack && !isQueue && !isPriorityQ) {
-                    result = "stack";
-                }
-                else if (!isStack && isQueue && !isPriorityQ) {
-                    result = "queue";
-                }
-                else if (!isStack && !isQueue && isPriorityQ) {
-                    result = "priority queue";
-                }
-                /**
-                 * if two of them are
-                 * true at the same time
-                 */
-                else if ((isStack && isQueue) || (isStack && isPriorityQ) || (isQueue && isPriorityQ)) {
-                    result = "not sure";
-                }
-                /**
-                 * if neither a stack, nor a
-                 * queue nor a priority queue
-                 */
-                else if (!isStack && !isQueue && !isPriorityQ){
-                    result = "impossible";
-                }
+            if (isStack && !isQueue && !isPriorityQ) {
+                result = "stack";
+            }
+            else if (!isStack && isQueue && !isPriorityQ) {
+                result = "queue";
+            }
+            else if (!isStack && !isQueue && isPriorityQ) {
+                result = "priority queue";
+            }
+            /**
+             * if two of them are
+             * true at the same time
+             */
+            else if ((isStack && isQueue) || (isStack && isPriorityQ) || (isQueue && isPriorityQ)) {
+                result = "not sure";
+            }
+            /**
+             * if neither a stack, nor a
+             * queue nor a priority queue
+             */
+            else if (!isStack && !isQueue && !isPriorityQ){
+                result = "impossible";
             }
             System.out.println(result);
         }
     }
 
 
-    public static int evalBagAfterRemoval(List<Integer> bagOfNumbers, Integer num, boolean[] whichStructure) {
+    public static String evalBagAfterRemoval(List<Integer> bagOfNumbers, Integer num, boolean[] whichStructure) {
         if (!bagOfNumbers.contains(num)) {
-            return -1;
+            return "impossible";
         }
-        else {
+
+        if (bagOfNumbers.size() != 0) {
             if (num != bagOfNumbers.get(bagOfNumbers.size()-1)) {
                 //not stack
                 whichStructure[0] = false;
@@ -89,10 +84,9 @@ public class Gds {
                 //not priority queue
                 whichStructure[2] = false;
             }
-
             bagOfNumbers.remove(num);
-            return 0;
         }
+        return "";
     }
 
 
