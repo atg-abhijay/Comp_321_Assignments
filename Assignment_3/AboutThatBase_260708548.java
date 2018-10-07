@@ -5,7 +5,7 @@ public class AboutThatBase_260708548 {
     public static void main(String[] args) {
         /**
          * creating a mapping for each
-         * number to a number/letter
+         * base to a number/letter
          */
         HashMap<Integer, String> mapping = new HashMap<>();
         for(int i = 1; i < 10; i++) {
@@ -46,6 +46,12 @@ public class AboutThatBase_260708548 {
                 int firstNum = 0;
                 int secondNum = 0;
                 int resultNum = 0;
+                /**
+                 * try to parse the number with given
+                 * base. if it cannot be parsed, catch
+                 * the exception and move on to the
+                 * next base.
+                 */
                 try {
                     firstNum = Integer.parseInt(firstExpr, base);
                     secondNum = Integer.parseInt(secondExpr, base);
@@ -61,6 +67,10 @@ public class AboutThatBase_260708548 {
                 }
             }
 
+            /**
+             * if no bases were added, then
+             * the expression is invalid.
+             */
             if (!anyBaseAppended) {
                 System.out.println("invalid");
             }
@@ -89,9 +99,19 @@ public class AboutThatBase_260708548 {
 
 
     public static boolean isBase1(String firstExpr, String op, String secondExpr, String resultExpr) {
+        /**
+         * the expressions should only
+         * be composed of the digit 1.
+         */
         String regex = "[1]+";
         boolean base1 = false;
         if(firstExpr.matches(regex) && secondExpr.matches(regex) && resultExpr.matches(regex)) {
+            /**
+             * since expressions are treated
+             * as tally marks, our computations
+             * will be in terms of the lengths
+             * of the expressions.
+             */
             int firstNum = firstExpr.length();
             int secondNum = secondExpr.length();
             int resultNum = resultExpr.length();
