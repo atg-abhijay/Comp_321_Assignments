@@ -3,6 +3,7 @@ import java.util.Scanner;
 
 public class AboutThatBase_260708548 {
     public static void main(String[] args) {
+        // test();
         /**
          * creating a mapping for each
          * number to a number/letter
@@ -40,6 +41,14 @@ public class AboutThatBase_260708548 {
             String resultExpr = sc.next();
             StringBuilder outcome = new StringBuilder();
             boolean anyBaseAppended = false;
+            /**
+             * checking for base = 1
+             */
+            boolean base1 = isBase1(firstExpr, op, secondExpr, resultExpr);
+            if (base1) {
+                outcome.append("1");
+                anyBaseAppended = true;
+            }
             // System.out.println(firstExpr + ", " + op + ", " + secondExpr + ", " +  resultExpr);
             for(int base = 2; base < 37; base++) {
                 int firstNum = 0;
@@ -54,17 +63,7 @@ public class AboutThatBase_260708548 {
                     continue;
                 }
 
-                boolean isEqual = false;
-                switch (op) {
-                    case "+": isEqual = (firstNum + secondNum) == resultNum;
-                                break;
-                    case "-": isEqual = (firstNum - secondNum) == resultNum;
-                                break;
-                    case "*": isEqual = (firstNum * secondNum) == resultNum;
-                                break;
-                    case "/": isEqual = ((double) firstNum / secondNum) == resultNum;
-                                break;
-                }
+                boolean isEqual = checkEquality(firstNum, op, secondNum, resultNum);
                 // System.out.println(base);
                 // System.out.println(isEqual);
 
@@ -85,6 +84,34 @@ public class AboutThatBase_260708548 {
         // test();
     }
 
+    public static boolean checkEquality(int firstNum, String op, int secondNum, int resultNum) {
+        boolean isEqual = false;
+        switch (op) {
+            case "+": isEqual = (firstNum + secondNum) == resultNum;
+                        return isEqual;
+            case "-": isEqual = (firstNum - secondNum) == resultNum;
+                        return isEqual;
+            case "*": isEqual = (firstNum * secondNum) == resultNum;
+                        return isEqual;
+            case "/": isEqual = ((double) firstNum / secondNum) == resultNum;
+                        return isEqual;
+        }
+        return isEqual;
+    }
+
+
+    public static boolean isBase1(String firstExpr, String op, String secondExpr, String resultExpr) {
+        String regex = "[1]+";
+        boolean base1 = false;
+        if(firstExpr.matches(regex) && secondExpr.matches(regex) && resultExpr.matches(regex)) {
+            int firstNum = firstExpr.length();
+            int secondNum = secondExpr.length();
+            int resultNum = resultExpr.length();
+            base1 = checkEquality(firstNum, op, secondNum, resultNum);
+        }
+        return base1;
+    }
+
     public static String reverseString(String s) {
         StringBuilder sb = new StringBuilder();
         sb.append(s);
@@ -96,7 +123,15 @@ public class AboutThatBase_260708548 {
         // for(char alphabet = 'a'; alphabet <= 'z'; alphabet++) {
         //     System.out.println(alphabet);
         // }
-        int result = Integer.parseInt("6ef", 16);
-        System.out.println(result);
+        // int result = Integer.parseInt("111111", 2);
+        // System.out.println(result);
+        String num = "1";
+        String regex = "[1]+";
+        if(num.matches(regex)) {
+            System.out.println("yes - true");
+        }
+        else {
+            System.out.println("no - false");
+        }
     }
 }
