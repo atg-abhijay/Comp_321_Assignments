@@ -3,7 +3,6 @@ import java.util.Scanner;
 
 public class AboutThatBase_260708548 {
     public static void main(String[] args) {
-        // test();
         /**
          * creating a mapping for each
          * number to a number/letter
@@ -18,14 +17,6 @@ public class AboutThatBase_260708548 {
             start += 1;
         }
         mapping.put(36, "0");
-        // System.out.println("Mapping: " + mapping.get(2));
-
-        /**
-         * checking hashmap key, values
-         */
-        // for(int key: mapping.keySet()) {
-        //     System.out.println(key + ": " + mapping.get(key));
-        // }
 
         Scanner sc = new Scanner(System.in);
         int numExpressions = sc.nextInt();
@@ -41,6 +32,7 @@ public class AboutThatBase_260708548 {
             String resultExpr = sc.next();
             StringBuilder outcome = new StringBuilder();
             boolean anyBaseAppended = false;
+
             /**
              * checking for base = 1
              */
@@ -49,7 +41,7 @@ public class AboutThatBase_260708548 {
                 outcome.append("1");
                 anyBaseAppended = true;
             }
-            // System.out.println(firstExpr + ", " + op + ", " + secondExpr + ", " +  resultExpr);
+
             for(int base = 2; base < 37; base++) {
                 int firstNum = 0;
                 int secondNum = 0;
@@ -58,15 +50,11 @@ public class AboutThatBase_260708548 {
                     firstNum = Integer.parseInt(firstExpr, base);
                     secondNum = Integer.parseInt(secondExpr, base);
                     resultNum = Integer.parseInt(resultExpr, base);
-                    // System.out.println(firstNum + ", " + secondNum + ", " + resultNum);
                 } catch (NumberFormatException e) {
                     continue;
                 }
 
                 boolean isEqual = checkEquality(firstNum, op, secondNum, resultNum);
-                // System.out.println(base);
-                // System.out.println(isEqual);
-
                 if(isEqual) {
                     outcome.append(mapping.get(base));
                     anyBaseAppended = true;
@@ -81,8 +69,8 @@ public class AboutThatBase_260708548 {
             }
         }
         sc.close();
-        // test();
     }
+
 
     public static boolean checkEquality(int firstNum, String op, int secondNum, int resultNum) {
         boolean isEqual = false;
@@ -110,28 +98,5 @@ public class AboutThatBase_260708548 {
             base1 = checkEquality(firstNum, op, secondNum, resultNum);
         }
         return base1;
-    }
-
-    public static String reverseString(String s) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(s);
-        StringBuilder sbReversed = sb.reverse();
-        return sbReversed.toString();
-    }
-
-    public static void test() {
-        // for(char alphabet = 'a'; alphabet <= 'z'; alphabet++) {
-        //     System.out.println(alphabet);
-        // }
-        // int result = Integer.parseInt("111111", 2);
-        // System.out.println(result);
-        String num = "1";
-        String regex = "[1]+";
-        if(num.matches(regex)) {
-            System.out.println("yes - true");
-        }
-        else {
-            System.out.println("no - false");
-        }
     }
 }
