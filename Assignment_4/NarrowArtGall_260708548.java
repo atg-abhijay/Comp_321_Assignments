@@ -2,15 +2,15 @@ import java.util.Scanner;
 
 public class NarrowArtGall_260708548 {
     public static void main(String[] args) {
-        final int negativeConstant = -10;
+        final Integer negativeConstant = Integer.MIN_VALUE;
         Scanner sc = new Scanner(System.in);
         while(sc.hasNextInt()) {
             int numRows = sc.nextInt();
             int numCloseRooms = sc.nextInt();
-            int[][] galleries = new int[numRows][2];
+            int[][] artGallery = new int[numRows][2];
             for(int p = 0; p < numRows; p++) {
-                galleries[p][0] = sc.nextInt();
-                galleries[p][1] = sc.nextInt();
+                artGallery[p][0] = sc.nextInt();
+                artGallery[p][1] = sc.nextInt();
             }
 
             int[][][] table = new int[numRows][numCloseRooms+1][3];
@@ -25,19 +25,19 @@ public class NarrowArtGall_260708548 {
             int[] row_1 = table[0][0];
             row_1[0] = negativeConstant;
             row_1[1] = negativeConstant;
-            row_1[2] = galleries[0][0] + galleries[0][1];
+            row_1[2] = artGallery[0][0] + artGallery[0][1];
 
             for(int p = 1; p < numRows; p++) {
                 int[] row_2 = table[p][0];
                 row_2[0] = negativeConstant;
                 row_2[1] = negativeConstant;
-                row_2[2] = table[p-1][0][2] + galleries[p][0] + galleries[p][1];
+                row_2[2] = table[p-1][0][2] + artGallery[p][0] + artGallery[p][1];
             }
 
             if(numCloseRooms > 0) {
                 int[] row_3 = table[0][1];
-                row_3[0] = galleries[0][1];
-                row_3[1] = galleries[0][0];
+                row_3[0] = artGallery[0][1];
+                row_3[1] = artGallery[0][0];
                 row_3[2] = negativeConstant;
             }
 
@@ -53,9 +53,9 @@ public class NarrowArtGall_260708548 {
                     int max_3 = Math.max(row_6[1], row_6[2]);
                     int max_4 = Math.max(row_6[0], max_3);
 
-                    row_4[0] = galleries[p][1] + max_1;
-                    row_4[1] = galleries[p][0] + max_2;
-                    row_4[2] = galleries[p][0] + max_4 + galleries[p][1];
+                    row_4[0] = artGallery[p][1] + max_1;
+                    row_4[1] = artGallery[p][0] + max_2;
+                    row_4[2] = artGallery[p][0] + max_4 + artGallery[p][1];
                 }
             }
 
