@@ -18,6 +18,7 @@ public class ExactChange_260708548 {
              * the answer as returned as an int array.
              * the first entry is the amount of money
              * paid and the second is the number of bills used.
+             * choosing an arbitrary, high value for capacity.
              */
             int[] answer = evaluateSolution(25001, billsCoins, numBillsCoins, itemPrice);
             System.out.println(answer[0] + " " + answer[1]);
