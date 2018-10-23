@@ -66,5 +66,6 @@ public class NarrowArtGall_260708548 {
             sc.nextInt();
             System.out.println(result);
         }
+        sc.close();
     }
 }
