@@ -92,7 +92,7 @@ public class ShortestPath_260708548 {
                 Vertex u = pq.poll();
                 if(u.shortestDistance != Integer.MAX_VALUE) {
                     for(Edge e: u.edges) {
-                        relaxEdge(u, e, predecessors);
+                        relaxEdge(u, e);
                     }
                 }
             }
@@ -127,15 +127,18 @@ public class ShortestPath_260708548 {
     }
 
 
-    public static void relaxEdge(Vertex startVertex, Edge e, Vertex[] predecessors) {
+    public static void relaxEdge(Vertex startVertex, Edge e) {
         Vertex v = e.endVertex;
         int timeMultiplier = 0;
         int timeWaited = 0;
-        int time = startVertex.shortestDistance;
+        double time = startVertex.shortestDistance;
         while(true) {
             int permittedTime = e.t0 + timeMultiplier*e.P;
             if(time > permittedTime) {
-                timeMultiplier += 1;
+                timeMultiplier = Math.ceil((time-permittedTime)/e.P);
+                permittedTime = permittedTime + timeMultiplier*e.P;
+                timeWaited = permittedTime - time;
+                time = permittedTime;
             }
             else if (time < permittedTime) {
                 timeWaited = permittedTime - time;
