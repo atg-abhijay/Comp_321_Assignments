@@ -23,22 +23,23 @@ class Vertex {
 
 class Edge {
     public Vertex endVertex;
-    // public int t0;
-    // public int P;
-    // public int traverseTime;
-    public int weight;
+    public int t0;
+    public int P;
+    public int traverseTime;
+    // public int weight;
 
-    Edge(Vertex v, int w) {
+    Edge(Vertex v, int t0, int p, int timeToTraverse) {
         this.endVertex = v;
-        // this.t0 = t0;
-        // this.P = p;
-        // this.traverseTime = timeToTraverse;
-        this.weight = w;
+        this.t0 = t0;
+        this.P = p;
+        this.traverseTime = timeToTraverse;
+        // this.weight = w;
     }
 }
 
 
 public class ShortestPath_260708548 {
+    // static int time = 0;
     public static void main(String[] args) {
         // PriorityQueue<Integer> pq = new PriorityQueue<>();
         // int[] sample = new int[] {53, 72, 19, 24, 35, 43};
@@ -50,7 +51,7 @@ public class ShortestPath_260708548 {
         // while(!pq.isEmpty()) {
         //     System.out.println(pq.poll());
         // }
-
+        // System.out.println("Welcome!");
         Scanner sc = new Scanner(System.in);
         while(true) {
             /**
@@ -58,16 +59,16 @@ public class ShortestPath_260708548 {
              */
             int numNodes = sc.nextInt();
             int numEdges = sc.nextInt();
-            // int numQueries = sc.nextInt();
+            int numQueries = sc.nextInt();
             int sourceVertex = sc.nextInt();
-            System.out.println(numNodes + ", " + numEdges + ", " + sourceVertex);
+            // System.out.println(numNodes + ", " + numEdges + ", " + numQueries + ", " + sourceVertex);
 
             /**
              * Finished all the test cases
              */
-            // if(numNodes + numEdges + numQueries + sourceVertex == 0) {
-            //     break;
-            // }
+            if(numNodes + numEdges + numQueries + sourceVertex == 0) {
+                break;
+            }
 
             /**
              * predecessors[i] will store the predecessor
@@ -97,48 +98,42 @@ public class ShortestPath_260708548 {
             for(int i = 0; i < numNodes; i++) {
                 pq.add(vertices[i]);
             }
-            System.out.println("Added vertices to Priority Queue.");
+            // System.out.println("Added vertices to Priority Queue.");
 
             /**
              * adding edges connected to the vertices
              */
             for(int i = 0; i < numEdges; i++) {
                 Vertex startVertex = vertices[sc.nextInt()];
-                Edge e = new Edge(vertices[sc.nextInt()],
-                                  sc.nextInt());
+                Edge e = new Edge(vertices[sc.nextInt()], sc.nextInt(),
+                                  sc.nextInt(), sc.nextInt());
                 startVertex.addEdge(e);
             }
-            System.out.println("Finished making and adding edges.");
+            // System.out.println("Finished making and adding edges.");
 
-            int count = 0;
             while(!pq.isEmpty()) {
                 Vertex u = pq.peek();
                 verticesDetermined.add(u);
-                System.out.println("Edges relaxed:");
-                for(Edge e: u.edges) {
-                    relaxEdge(u, e, predecessors);
+                if(u.shortestDistance != Integer.MAX_VALUE) {
+                    for(Edge e: u.edges) {
+                        relaxEdge(u, e, predecessors);
+                    }
                 }
-                System.out.println();
                 pq.poll();
                 Vertex[] pqArray = new Vertex[pq.size()];
                 pqArray = pq.toArray(pqArray);
                 pq = convertArrayToPQ(pqArray);
-                // Arrays.sort(pqArrayBefore, new Comparator<Vertex>() {
-                //     @Override
-                //     public int compare(Vertex v1, Vertex v2) {
-                //         return Integer.compare(v1.shortestDistance, v2.shortestDistance);
-                //     }
-                // });
-                // System.out.println("PQ state: ");
-                // for(int i = 0; i < pqArrayBefore.length; i++) {
-                //     System.out.println(pqArrayBefore[i].number + ", " + pqArrayBefore[i].shortestDistance);
-                // }
-                // System.out.println();
-                // count += 1;
             }
 
-            verticesDetermined.forEach(v->System.out.println("Vertex #: " + v.number + ", Distance: " + v.shortestDistance));
-            break;
+            for(Vertex v: verticesDetermined) {
+                if(v.shortestDistance == Integer.MAX_VALUE) {
+                    System.out.println("Impossible");
+                }
+                else {
+                    // System.out.println("Vertex #: " + v.number + ", Distance: " + v.shortestDistance);
+                    System.out.println(v.shortestDistance);
+                }
+            }
         }
     }
 
@@ -160,10 +155,27 @@ public class ShortestPath_260708548 {
 
     public static void relaxEdge(Vertex startVertex, Edge e, Vertex[] predecessors) {
         Vertex v = e.endVertex;
-        if(v.shortestDistance > startVertex.shortestDistance + e.weight) {
-            v.shortestDistance = startVertex.shortestDistance + e.weight;
-            System.out.println(startVertex.number + ", " + v.number + ", " + v.shortestDistance);
-            predecessors[v.number] = startVertex;
+        int timeMultiplier = 0;
+        int timeWaited = 0;
+        int time = startVertex.shortestDistance;
+        while(true) {
+            int permittedTime = e.t0 + timeMultiplier*e.P;
+            if(time > permittedTime) {
+                timeMultiplier += 1;
+            }
+            else if (time < permittedTime) {
+                time += 1;
+                timeWaited += 1;
+            }
+            else {
+                int newTime = startVertex.shortestDistance + timeWaited + e.traverseTime;
+                if(v.shortestDistance > newTime) {
+                    v.shortestDistance = newTime;
+                    // System.out.println(startVertex.number + ", " + v.number + ", " + v.shortestDistance);
+                    predecessors[v.number] = startVertex;
+                    break;
+                }
+            }
         }
     }
 
