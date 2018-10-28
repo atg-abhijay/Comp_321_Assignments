@@ -1,12 +1,39 @@
 import java.util.*;
 
+/**
+ * class Vertex to store the vertex number
+ * (between 0 and n-1) and the shortest
+ * distance from the source vertex to it
+ */
 class Vertex {
-    public int index;
+    public int number;
     public Integer shortestDistance;
+    public ArrayList<Edge> edges;
 
-    Vertex(int idx, int dist) {
-        this.index = idx;
+    Vertex(int num, int dist) {
+        this.number = num;
         this.shortestDistance = dist;
+    }
+
+    public void addEdge(Edge e) {
+        edges.add(e);
+    }
+}
+
+
+class Edge {
+    public Vertex startVertex;
+    public Vertex endVertex;
+    public int t0;
+    public int P;
+    public int traverseTime;
+
+    Edge(Vertex u, Vertex v, int t0, int p, int timeToTraverse) {
+        this.startVertex = u;
+        this.endVertex = v;
+        this.t0 = t0;
+        this.P = p;
+        this.traverseTime = timeToTraverse;
     }
 }
 
@@ -42,33 +69,37 @@ public class ShortestPath_260708548 {
             }
 
             /**
-             * distances[i] will store the shortest
-             * distance of i from the source vertex.
              * predecessors[i] will store the predecessor
              * of i in the shortest path obtained.
              */
-            int[] distances = new int[numEdges];
-            int[] predecessors = new int[numNodes];
+            Vertex[] vertices = new Vertex[numEdges];
+            Vertex[] predecessors = new Vertex[numNodes];
             init(distances, predecessors, numNodes, sourceVertex);
 
             /**
              * verticesDetermined - vertices whose final shortest-path
              * weights are determined
-             * pq - keys will be shortest-path weights distances[i]
+             * pq - keys will be shortest-path weights for the vertices
              */
-            ArrayList<Integer> verticesDetermined = new ArrayList<>();
-            PriorityQueue<Integer> pq = new PriorityQueue<>();
+            ArrayList<Vertex> verticesDetermined = new ArrayList<>();
+            PriorityQueue<Vertex> pq = new PriorityQueue(new Comparator<Vertex>() {
+                @Override
+                public int compare(Vertex v1, Vertex v2) {
+                    return v1.shortestDistance - v2.shortestDistance;
+                }
+            });
+
             for(int i = 0; i < numEdges; i++) {
-                pq.add(distances[i]);
+                pq.add(vertices[i]);
             }
 
-            /**
-             * will keep track of the shortest path
-             * formed througout the graph
-             */
+
+
 
             while(!pq.isEmpty()) {
-                int minDistance = pq.poll();
+                Vertex u = pq.poll();
+                verticesDetermined.add(u);
+
 
             }
             for(int i = 0; i < numEdges; i++) {
@@ -80,17 +111,17 @@ public class ShortestPath_260708548 {
 
 
     /**
-     * initialize distance from source vertex for
-     * all vertices to be infinity except distance
-     * of source vertex from itself, which is 0.
-     * set the predecessors of each of the vertices to -1.
+     * initialize vertices having infinite distances
+     * from the source vertex. setting predecessors
+     * of all vertices to null. the shortest distance
+     * of source vertex from source vertex is 0.
      */
-    public static void init(int[] distances, int[] predecessors, int n, int sourceVertex) {
+    public static void init(Vertex[] vertices, Vertex[] predecessors, int n, int sourceVertex) {
         for(int i = 0; i < n; i++) {
-            distances[i] = Integer.MAX_VALUE;
-            predecessors[i] = -1;
+            vertices[i] = new Vertex(i, Integer.MAX_VALUE);
+            predecessors[i] = null;
         }
-        distances[sourceVertex] = 0;
+        vertices[sourceVertex].shortestDistance = 0;
     }
 
 }
