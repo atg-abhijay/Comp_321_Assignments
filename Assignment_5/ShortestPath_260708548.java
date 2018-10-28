@@ -60,15 +60,13 @@ public class ShortestPath_260708548 {
              * of i in the shortest path obtained.
              */
             Vertex[] vertices = new Vertex[numNodes];
-            Vertex[] predecessors = new Vertex[numNodes];
-            init(vertices, predecessors, numNodes, sourceVertex);
+            init(vertices, numNodes, sourceVertex);
 
             /**
              * verticesDetermined - vertices whose final shortest-path
              * weights are determined
              * pq - keys will be shortest-path weights for the vertices
              */
-            ArrayList<Vertex> verticesDetermined = new ArrayList<>();
             PriorityQueue<Vertex> pq = new PriorityQueue<Vertex>(new Comparator<Vertex>() {
                 @Override
                 public int compare(Vertex v1, Vertex v2) {
@@ -91,15 +89,12 @@ public class ShortestPath_260708548 {
             }
 
             while(!pq.isEmpty()) {
-                Vertex u = pq.peek();
-                verticesDetermined.add(u);
+                Vertex u = pq.poll();
                 if(u.shortestDistance != Integer.MAX_VALUE) {
                     for(Edge e: u.edges) {
                         relaxEdge(u, e, predecessors);
                     }
                 }
-                pq.poll();
-                // pq = new PriorityQueue<Vertex>(pq);
             }
 
             for(int i = 0; i < numQueries; i++) {
@@ -114,6 +109,7 @@ public class ShortestPath_260708548 {
             }
             System.out.println();
         }
+        sc.close();
     }
 
 
@@ -123,10 +119,9 @@ public class ShortestPath_260708548 {
      * of all vertices to null. the shortest distance
      * of source vertex from source vertex is 0.
      */
-    public static void init(Vertex[] vertices, Vertex[] predecessors, int n, int sourceVertex) {
+    public static void init(Vertex[] vertices, int n, int sourceVertex) {
         for(int i = 0; i < n; i++) {
             vertices[i] = new Vertex(i, Integer.MAX_VALUE);
-            predecessors[i] = null;
         }
         vertices[sourceVertex].shortestDistance = 0;
     }
@@ -143,14 +138,13 @@ public class ShortestPath_260708548 {
                 timeMultiplier += 1;
             }
             else if (time < permittedTime) {
-                time += 1;
-                timeWaited += 1;
+                timeWaited = permittedTime - time;
+                time = permittedTime;
             }
             else {
                 int newTime = startVertex.shortestDistance + timeWaited + e.traverseTime;
                 if(v.shortestDistance > newTime) {
                     v.shortestDistance = newTime;
-                    predecessors[v.number] = startVertex;
                     break;
                 }
             }
