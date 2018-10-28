@@ -125,15 +125,28 @@ public class ShortestPath_260708548 {
                 pq = convertArrayToPQ(pqArray);
             }
 
-            for(Vertex v: verticesDetermined) {
-                if(v.shortestDistance == Integer.MAX_VALUE) {
+            for(int i = 0; i < numQueries; i++) {
+                Vertex queryNode = vertices[sc.nextInt()];
+                if(queryNode.shortestDistance == Integer.MAX_VALUE) {
                     System.out.println("Impossible");
                 }
                 else {
                     // System.out.println("Vertex #: " + v.number + ", Distance: " + v.shortestDistance);
-                    System.out.println(v.shortestDistance);
+                    System.out.println(queryNode.shortestDistance);
                 }
+
             }
+            System.out.println();
+
+            // for(Vertex v: verticesDetermined) {
+            //     if(v.shortestDistance == Integer.MAX_VALUE) {
+            //         System.out.println("Impossible");
+            //     }
+            //     else {
+            //         // System.out.println("Vertex #: " + v.number + ", Distance: " + v.shortestDistance);
+            //         System.out.println(v.shortestDistance);
+            //     }
+            // }
         }
     }
 
