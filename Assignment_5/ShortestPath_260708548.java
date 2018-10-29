@@ -2,8 +2,9 @@ import java.util.*;
 
 /**
  * class Vertex to store the vertex number
- * (between 0 and n-1) and the shortest
+ * (between 0 and n-1), the shortest
  * distance from the source vertex to it
+ * and the edges that originate from it.
  */
 class Vertex {
     public int number;
@@ -20,7 +21,10 @@ class Vertex {
     }
 }
 
-
+/**
+ * class Edge to store the endVertex of
+ * the edge, and the details of its time constraints.
+ */
 class Edge {
     public Vertex endVertex;
     public int t0;
@@ -37,7 +41,11 @@ class Edge {
 
 
 public class ShortestPath_260708548 {
-    static int largeValue = (int) Math.pow(10, 8);
+    /**
+     * constant large value used
+     * for the initializations
+     */
+    final static int largeValue = (int) Math.pow(10, 8);
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         while(true) {
@@ -56,17 +64,12 @@ public class ShortestPath_260708548 {
                 break;
             }
 
-            /**
-             * predecessors[i] will store the predecessor
-             * of i in the shortest path obtained.
-             */
             Vertex[] vertices = new Vertex[numNodes];
             init(vertices, numNodes, sourceVertex);
 
             /**
-             * verticesDetermined - vertices whose final shortest-path
-             * weights are determined
-             * pq - keys will be shortest-path weights for the vertices
+             * pq - vertices arranged according to
+             * minimum distance from the source vertex.
              */
             PriorityQueue<Vertex> pq = new PriorityQueue<Vertex>(new Comparator<Vertex>() {
                 @Override
@@ -90,10 +93,14 @@ public class ShortestPath_260708548 {
             }
 
             while(!pq.isEmpty()) {
+                /**
+                 * get the vertex closest
+                 * to the source vertex.
+                 */
                 Vertex u = pq.poll();
                 if(u.shortestDistance != largeValue) {
                     for(Edge e: u.edges) {
-                        relaxEdge(u, e);
+                        relaxEdge(u, e, pq);
                     }
                 }
             }
@@ -116,8 +123,7 @@ public class ShortestPath_260708548 {
 
     /**
      * initialize vertices having infinite distances
-     * from the source vertex. setting predecessors
-     * of all vertices to null. the shortest distance
+     * from the source vertex. the shortest distance
      * of source vertex from source vertex is 0.
      */
     public static void init(Vertex[] vertices, int n, int sourceVertex) {
@@ -128,15 +134,27 @@ public class ShortestPath_260708548 {
     }
 
 
-    public static void relaxEdge(Vertex startVertex, Edge e) {
+    public static void relaxEdge(Vertex startVertex, Edge e, PriorityQueue<Vertex> pq) {
         Vertex v = e.endVertex;
         int timeMultiplier = 0;
         int timeWaited = 0;
         int time = startVertex.shortestDistance;
         int permittedTime = e.t0 + timeMultiplier*e.P;
+        /**
+         * if we are at a time greater than when
+         * we are allowed to traverse the edge.
+         */
         if(time > permittedTime) {
+            /**
+             * if it is zero, then we cannot
+             * traverse this edge.
+             */
             if(e.P != 0) {
-                double timeDiff = time-permittedTime;
+                /**
+                 * we calculate the new permitted time
+                 * that we can traverse the edge at.
+                 */
+                double timeDiff = time-e.t0;
                 timeMultiplier = (int) Math.ceil(timeDiff/e.P);
                 permittedTime = e.t0 + timeMultiplier*e.P;
             }
@@ -144,10 +162,22 @@ public class ShortestPath_260708548 {
                 return;
             }
         }
+        /**
+         * how much time we had to wait.
+         */
         timeWaited = permittedTime - time;
         int newTime = startVertex.shortestDistance + timeWaited + e.traverseTime;
+        /**
+         * if we can reach v in shorter time,
+         * we update the value associated with it
+         * and add it back to the queue if its
+         * distance(or time) value changed since
+         * now new possibilities may open up which
+         * were not open before.
+         */
         if(v.shortestDistance > newTime) {
             v.shortestDistance = newTime;
+            pq.add(v);
         }
     }
 }
