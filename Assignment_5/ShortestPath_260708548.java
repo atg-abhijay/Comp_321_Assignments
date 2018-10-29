@@ -37,6 +37,7 @@ class Edge {
 
 
 public class ShortestPath_260708548 {
+    static int largeValue = (int) Math.pow(10, 8);
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         while(true) {
@@ -90,7 +91,7 @@ public class ShortestPath_260708548 {
 
             while(!pq.isEmpty()) {
                 Vertex u = pq.poll();
-                if(u.shortestDistance != Integer.MAX_VALUE) {
+                if(u.shortestDistance != largeValue) {
                     for(Edge e: u.edges) {
                         relaxEdge(u, e);
                     }
@@ -99,7 +100,7 @@ public class ShortestPath_260708548 {
 
             for(int i = 0; i < numQueries; i++) {
                 Vertex queryNode = vertices[sc.nextInt()];
-                if(queryNode.shortestDistance == Integer.MAX_VALUE) {
+                if(queryNode.shortestDistance == largeValue) {
                     System.out.println("Impossible");
                 }
                 else {
@@ -121,7 +122,7 @@ public class ShortestPath_260708548 {
      */
     public static void init(Vertex[] vertices, int n, int sourceVertex) {
         for(int i = 0; i < n; i++) {
-            vertices[i] = new Vertex(i, Integer.MAX_VALUE);
+            vertices[i] = new Vertex(i, largeValue);
         }
         vertices[sourceVertex].shortestDistance = 0;
     }
