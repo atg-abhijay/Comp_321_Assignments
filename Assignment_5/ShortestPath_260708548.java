@@ -134,9 +134,14 @@ public class ShortestPath_260708548 {
         int time = startVertex.shortestDistance;
         int permittedTime = e.t0 + timeMultiplier*e.P;
         if(time > permittedTime) {
-            double timeDiff = time-permittedTime;
-            timeMultiplier = (int) Math.ceil(timeDiff/e.P);
-            permittedTime = e.t0 + timeMultiplier*e.P;
+            if(e.P != 0) {
+                double timeDiff = time-permittedTime;
+                timeMultiplier = (int) Math.ceil(timeDiff/e.P);
+                permittedTime = e.t0 + timeMultiplier*e.P;
+            }
+            else {
+                return;
+            }
         }
         timeWaited = permittedTime - time;
         int newTime = startVertex.shortestDistance + timeWaited + e.traverseTime;
