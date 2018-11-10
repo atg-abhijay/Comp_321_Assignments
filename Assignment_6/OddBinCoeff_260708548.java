@@ -1,37 +1,35 @@
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class OddBinCoeff_260708548 {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        BigInteger n = sc.nextBigInteger();
-        // BigInteger[] factorials = new BigInteger[n];
-        ArrayList<BigInteger> factorials = new ArrayList<BigInteger>();
-        factorials.add(BigInteger.ONE);
-        factorials.add(BigInteger.ONE);
-        if(n.compareTo(BigInteger.ONE) == 0) {
+        long n = sc.nextLong();
+        sc.close();
+        final long ZERO = (long) 0;
+        final long ONE = (long) 1;
+
+        if(n == 1) {
             System.out.println(1);
             return;
         }
-        final BigInteger TWO = new BigInteger("2");
-        BigInteger numOddBinCoeff = new BigInteger("3");
-        for(BigInteger i = TWO; i.compareTo(n) < 0; i = i.add(BigInteger.ONE)) {
-            BigInteger jUpperBound = i.add(BigInteger.ONE).divide(TWO);
-            for(BigInteger j = BigInteger.ZERO; j.compareTo(jUpperBound) < 0; j = j.add(BigInteger.ONE)) {
 
+        long numOddBinCoeff = ONE;
+        boolean evenI = false;
+        for(long i = ONE; i < n; i++) {
+            for(long j = ZERO; j < (i+1)/2; j++) {
+                if((i | (~j)) == -1) {
+                    numOddBinCoeff += 2;
+                }
             }
-            if(i.divideAndRemainder(TWO)[1].compareTo(BigInteger.ZERO) ==  0) {
-                BigInteger numAtHalf = factorials.get(jUpperBound);
-                if(numAtHalf.divideAndRemainder(TWO)[1]);
+            if(evenI) {
+                long jUpperBound = (i+1)/2;
+                if((i | (~jUpperBound)) == -1) {
+                    numOddBinCoeff += 1;
+                }
             }
+            evenI = !evenI;
         }
         System.out.println(numOddBinCoeff);
-    }
-
-    public static BigInteger calculateFactorial(ArrayList<BigInteger> factorials, BigInteger i, BigInteger j) {
-        BigInteger factorialI = factorials.get(i);
-        BigInteger factorialJ = factorials.get(j);
-
     }
 }
