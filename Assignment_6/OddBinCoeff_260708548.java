@@ -5,30 +5,20 @@ public class OddBinCoeff_260708548 {
         Scanner sc = new Scanner(System.in);
         long n = sc.nextLong();
         sc.close();
-        final long ZERO = (long) 0;
-        final long ONE = (long) 1;
 
-        if(n == 1) {
-            System.out.println(1);
-            return;
+        double numOddBinCoeff = 0;
+        char[] number = Long.toBinaryString(n).toCharArray();
+        int numLength = number.length;
+        int power = numLength-1;
+        int twosPower = 0;
+        for(int i = 0; i < numLength; i++) {
+            if(number[i] == '1') {
+                numOddBinCoeff += Math.pow(2, twosPower) * Math.pow(3, power);
+                twosPower += 1;
+            }
+            power -= 1;
         }
 
-        long numOddBinCoeff = ONE;
-        boolean evenI = false;
-        for(long i = ONE; i < n; i++) {
-            long jUpperBound = (i+1)/2;
-            for(long j = ZERO; j < jUpperBound; j++) {
-                if((i | (~j)) == -1) {
-                    numOddBinCoeff += 2;
-                }
-            }
-            if(evenI) {
-                if((i | (~jUpperBound)) == -1) {
-                    numOddBinCoeff += 1;
-                }
-            }
-            evenI = !evenI;
-        }
-        System.out.println(numOddBinCoeff);
+        System.out.println((long) numOddBinCoeff);
     }
 }
