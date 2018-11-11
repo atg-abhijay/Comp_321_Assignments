@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class OddBinCoeff_260708548 {
@@ -17,13 +16,13 @@ public class OddBinCoeff_260708548 {
         long numOddBinCoeff = ONE;
         boolean evenI = false;
         for(long i = ONE; i < n; i++) {
-            for(long j = ZERO; j < (i+1)/2; j++) {
+            long jUpperBound = (i+1)/2;
+            for(long j = ZERO; j < jUpperBound; j++) {
                 if((i | (~j)) == -1) {
                     numOddBinCoeff += 2;
                 }
             }
             if(evenI) {
-                long jUpperBound = (i+1)/2;
                 if((i | (~jUpperBound)) == -1) {
                     numOddBinCoeff += 1;
                 }
