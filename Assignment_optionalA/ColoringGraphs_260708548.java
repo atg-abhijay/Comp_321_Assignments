@@ -103,6 +103,11 @@ public class ColoringGraphs_260708548 {
             }
         }
 
+        /**
+         * final value of colorToUse will
+         * tell us how many colors have
+         * been used so far
+         */
         System.out.println(colorToUse);
     }
 }
