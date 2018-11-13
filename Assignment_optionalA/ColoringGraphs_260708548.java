@@ -1,4 +1,3 @@
-import java.beans.VetoableChangeListener;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Scanner;
@@ -20,7 +19,6 @@ class Vertex {
 
 public class ColoringGraphs_260708548 {
     public static void main(String[] args) {
-        String[] letters = new String[] {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K"};
         Scanner sc = new Scanner(System.in);
         String[] nV = sc.nextLine().split(" ");
         int numVertices = Integer.parseInt(nV[0]);
@@ -31,10 +29,8 @@ public class ColoringGraphs_260708548 {
          * graph along with their neighbors
          */
         for(int i = 0; i < numVertices; i++) {
-            // System.out.println("Iteration: " + i);
             Vertex v = new Vertex(i);
             String[] nbs = sc.nextLine().split(" ");
-            // System.out.println("Length: " + nbs.length);
             for(int j = 0; j < nbs.length; j++) {
                 if(nbs[j] != "") {
                     v.neighbors.add(Integer.parseInt(nbs[j]));
@@ -42,7 +38,12 @@ public class ColoringGraphs_260708548 {
             }
             graph.add(v);
         }
+        sc.close();
 
+        /**
+         * sorting the graph in descending
+         * order of vertex degrees
+         */
         graph.sort(new Comparator<Vertex>() {
             @Override
             public int compare(Vertex v1, Vertex v2) {
@@ -50,18 +51,34 @@ public class ColoringGraphs_260708548 {
             }
         });
 
-        ArrayList<Integer> vertexNumbers = new ArrayList<Integer>();
-        for(Vertex v: graph) {
-            vertexNumbers.add(v.number);
-        }
 
         int colorToUse = 0;
+        /**
+         * at each iteration of the while loop,
+         * we start with the vertex with the highest degree
+         * that has not been visited yet. if there exists such
+         * a vertex, then we do not stop. we have to
+         * refresh the stop value to true at the
+         * beginning of every iteration. if all the
+         * vertices have been visited, then stop remains
+         * true and we will stop once we finish the current
+         * iteration.
+         */
         boolean stop = false;
         while(!stop) {
             stop = true;
+            /**
+             * first vertex to
+             * obtain the new color
+             */
             Vertex v = null;
             for(Vertex u: graph) {
                 if(u.visited == false) {
+                    /**
+                     * if u has not been visited yet,
+                     * we assign it a new color and
+                     * set some other values.
+                     */
                     u.visited = true;
                     u.color = colorToUse;
                     v = u;
@@ -71,6 +88,13 @@ public class ColoringGraphs_260708548 {
                 }
             }
 
+            /**
+             * get all those vertices who have not been
+             * visited yet and are not a part of
+             * v's neighbor list. since they are not
+             * neighbors of v, we can assign them the
+             * same color as v.
+             */
             for(Vertex p: graph) {
                 if(!p.visited && !v.neighbors.contains(p.number)) {
                     p.visited = true;
@@ -79,30 +103,6 @@ public class ColoringGraphs_260708548 {
             }
         }
 
-        // boolean stop = false;
-        // while(!stop) {
-        //     Vertex v = graph.get(0);
-        //     if(v.visited = false) {
-        //         v.color = colorToUse;
-        //         v.visited = true;
-        //     }
-
-        //     for(Vertex u: graph) {
-        //         if(!v.neighbors.contains(u.number)) {
-        //             u.color = v.color;
-        //             graph.remove(u);
-        //         }
-        //     }
-        //     colorToUse += 1;
-        // }
-
         System.out.println(colorToUse);
-    }
-
-    public static void printArray(ArrayList<Integer> vertexNums, String[] letters) {
-        for(int i = 0; i < vertexNums.size(); i++) {
-            System.out.print(letters[vertexNums.get(i)] + " ");
-        }
-        System.out.println();
     }
 }
