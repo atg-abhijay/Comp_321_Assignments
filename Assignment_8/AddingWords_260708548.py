@@ -2,45 +2,57 @@ import sys
 
 def main():
     vars_dict = {}
-    for line in sys.stdin:
+    # while True:
+    #     line = input()
+    #     if line is None:
+    #         break
+    for line in sys.stdin.readlines():
         tokens = line.split(' ')
         first_token = tokens[0]
+
         if first_token == 'def':
             vars_dict[tokens[1]] = int(tokens[2])
 
         elif first_token == 'calc':
-            result, count = 0, 1
+            is_valid = True
+            result, add_or_subtract, count = 0, 1, 1
             num_terms = len(tokens) - 2
             while count <= num_terms:
                 token = tokens[count]
                 if token == '+':
-                    return_values = evaluate_calc(tokens, vars_dict, count, 1)
-                    result += return_values[1]
-                    count += 2
+                    add_or_subtract = 1
 
                 elif token == '-':
-                    return_values = evaluate_calc(tokens, vars_dict, count, -1)
-                    result -= return_values[1]
-                    count += 2
+                    add_or_subtract = -1
 
                 else:
-                    return_values = evaluate_calc(tokens, vars_dict, count, 0)
-                    result = return_values[1]
-                    count += 1
+                    if token not in vars_dict:
+                        print_answer(tokens, "unknown")
+                        is_valid = False
+                        break
 
-                if not return_values[0]:
-                    break
+                    result += add_or_subtract*vars_dict[token]
+
+                count += 1
+
+            if is_valid:
+                found = False
+                for var_name, val in vars_dict.items():
+                    if val == result:
+                        print_answer(tokens, var_name)
+                        found = True
+                        break
+
+                if not found:
+                    print_answer(tokens, "unknown")
+
 
         else:
             vars_dict = {}
 
 
-def evaluate_calc(tokens, vars_dict, count, operation):
-    if tokens[count] not in vars_dict:
-        print(' '.join(tokens[1:-1]), '= unknown')
-        return False, -1
+def print_answer(tokens, answer):
+    print(' '.join(tokens[1:-1]), '=', answer)
 
-    if operation != 0:
-        return True, vars_dict[tokens[count+1]]
 
-    return True, vars_dict[tokens[count]]
+main()
