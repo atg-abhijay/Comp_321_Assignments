@@ -1,12 +1,8 @@
-import sys
+from sys import stdin
 
 def main():
     vars_dict = {}
-    # while True:
-    #     line = input()
-    #     if line is None:
-    #         break
-    for line in sys.stdin.readlines():
+    for line in stdin.readlines():
         tokens = line.split(' ')
         first_token = tokens[0]
 
@@ -36,16 +32,7 @@ def main():
                 count += 1
 
             if is_valid:
-                found = False
-                for var_name, val in vars_dict.items():
-                    if val == result:
-                        print_answer(tokens, var_name)
-                        found = True
-                        break
-
-                if not found:
-                    print_answer(tokens, "unknown")
-
+                check_result_exists(result, vars_dict, tokens)
 
         else:
             vars_dict = {}
@@ -53,6 +40,18 @@ def main():
 
 def print_answer(tokens, answer):
     print(' '.join(tokens[1:-1]), '=', answer)
+
+
+def check_result_exists(result, vars_dict, tokens):
+    found = False
+    for var_name, val in vars_dict.items():
+        if val == result:
+            print_answer(tokens, var_name)
+            found = True
+            break
+
+    if not found:
+        print_answer(tokens, "unknown")
 
 
 main()
